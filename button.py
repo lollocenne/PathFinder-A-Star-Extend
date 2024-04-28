@@ -16,7 +16,7 @@ class Button():
         self.string = text
         
         self.color = (50, 50, 50)
-        self.colorActive = (70, 70, 70)
+        self.colorActive = (100, 100, 100)
         self.textColor = (255, 255, 255)
         
         self.FONT = pygame.font.SysFont("comicsan", 20)
