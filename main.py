@@ -1,6 +1,7 @@
 import pygame
 from button import Button
 from a_star import Astar
+from math import *
 
 pygame.font.init()
 
@@ -47,6 +48,20 @@ def addNodes(x, y) -> None:
             elif button.txt == "Node":
                 addNode(x, y)
 
+
+roadNode = []
+def addRoad(x, y) -> None:
+    for node in aStar.nodes:
+        if sqrt(pow(node["x"] - x, 2) + pow(node["y"] - y, 2)) <= 10:
+            if len(roadNode) == 0:
+                roadNode.append(node)
+            else:
+                if roadNode[0] != node and not node in roadNode[0]["neighbors"]:
+                    roadNode[0]["neighbors"].append(node)
+                    node["neighbors"].append(roadNode[0])
+                
+                del roadNode[0]
+
 def update():
     pass
 
@@ -56,9 +71,21 @@ def draw():
     for b in buttons:
         b.draw()
     
+    if len(roadNode) == 1:
+        pygame.draw.line(WINDOW, (0, 0, 0), (roadNode[0]["x"], roadNode[0]["y"]), (pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1]), 5)
+    
     for node in aStar.nodes:
+        for n in node["neighbors"]:
+            if node["state"] == n["state"] == "active":
+                pygame.draw.line(WINDOW, (255, 255, 0), (node["x"], node["y"]), (n["x"], n["y"]), 5)
+            elif node["state"] == n["state"] == "path":
+                pygame.draw.line(WINDOW, (0, 100, 0), (node["x"], node["y"]), (n["x"], n["y"]), 5)
+            else:
+                pygame.draw.line(WINDOW, (0, 0, 0), (node["x"], node["y"]), (n["x"], n["y"]), 5)
+    
+    for node in aStar.nodes:        
         if node["state"] == None:
-            pygame.draw.circle(WINDOW, (0, 0, 0), (node["x"], node["y"]), 10)
+            pygame.draw.circle(WINDOW, (0, 255, 255), (node["x"], node["y"]), 10)
         elif node["state"] == "active":
             pygame.draw.circle(WINDOW, (255, 255, 0), (node["x"], node["y"]), 10)
         elif node["state"] == "used":
@@ -88,7 +115,10 @@ def main():
                 break
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if event.pos[1] > buttons[0].y + buttons[0].height + 10:
-                    addNodes(event.pos[0], event.pos[1])
+                    if buttons[5].active:
+                        addRoad(event.pos[0], event.pos[1])
+                    else:
+                        addNodes(event.pos[0], event.pos[1])
                 else:
                     selectButton(event.pos[0], event.pos[1])
         

@@ -4,8 +4,8 @@ from math import *
 #node = {"x": x, "y": y, "state": None, "neighbors": list[node], "path": list[node]}
 class Astar:
     def __init__(self):
-        self.startNode: dict = {"x": None, "y": None, "state": "start", "neighbors": None}
-        self.endNode: dict = {"x": None, "y": None, "state": "target", "neighbors": None}
+        self.startNode: dict = {"x": None, "y": None, "state": "start", "neighbors": []}
+        self.endNode: dict = {"x": None, "y": None, "state": "target", "neighbors": []}
         
         self.nodes: list[dict] = [self.startNode, self.endNode]
         self.activeNodes: list[dict] = [self.startNode]
