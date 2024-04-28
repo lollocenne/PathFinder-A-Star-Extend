@@ -1,7 +1,7 @@
 from math import *
 
 
-#a node = {"x": x, "y": y, "state": None, "neighbors": list[node], "path": list[node]}
+#node = {"x": x, "y": y, "state": None, "neighbors": list[node], "path": list[node]}
 class Astar:
     def __init__(self):
         self.startNode: dict = None
