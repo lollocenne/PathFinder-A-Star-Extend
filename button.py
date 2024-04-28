@@ -22,6 +22,8 @@ class Button():
         self.FONT = pygame.font.SysFont("comicsan", 20)
         self.text = self.FONT.render(self.string, True, self.textColor)
         
+        self.txt = text
+        
         self.hitbox = pygame.Rect(self.x, self.y, self.width, self.height)
         
         self.active = False

@@ -15,9 +15,30 @@ buttons: list[Button] = []
 for i in range(len(buttonsText)):
     buttons.append(Button(WINDOW, i*WIDTH/8 + i, buttonsText[i]))
 
-buttons[0].active = True
+buttons[2].active = True
 
 aStar: Astar = Astar()
+
+def addStartNode(x, y) -> None:
+    aStar.startNode["x"] = x
+    aStar.startNode["y"] = y
+
+def addEndNode(x, y) -> None:
+    aStar.endNode["x"] = x
+    aStar.endNode["y"] = y
+
+def addNode(x, y) -> None:
+    pass
+
+def addNodes(x, y) -> None:
+    for button in buttons:
+        if button.active == True:
+            if button.txt == "Start Node":
+                addStartNode(x, y)
+            elif button.txt == "End Node":
+                addEndNode(x, y)
+            elif button.txt == "Node":
+                addNode(x, y)
 
 def update():
     pass
@@ -31,6 +52,18 @@ def draw():
     for node in aStar.nodes:
         if node["state"] == None:
             pygame.draw.circle(WINDOW, (0, 0, 0), (node["x"], node["y"]), 10)
+        elif node["state"] == "active":
+            pygame.draw.circle(WINDOW, (255, 255, 0), (node["x"], node["y"]), 10)
+        elif node["state"] == "used":
+            pygame.draw.circle(WINDOW, (255, 0, 255), (node["x"], node["y"]), 10)
+        elif node["state"] == "path":
+            pygame.draw.circle(WINDOW, (0, 100, 0), (node["x"], node["y"]), 10)
+        elif node["state"] == "start":
+            if node["x"] != None and node["y"] != None:
+                pygame.draw.circle(WINDOW, (0, 0, 255), (node["x"], node["y"]), 10)
+        elif node["state"] == "target":
+            if node["x"] != None and node["y"] != None:
+                pygame.draw.circle(WINDOW, (255, 0, 0), (node["x"], node["y"]), 10)
     
     pygame.display.update()
 
@@ -46,7 +79,12 @@ def main():
             if event.type == pygame.QUIT:
                 run = False
                 break
-                
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if event.pos[1] > buttons[0].y + buttons[0].height + 10:
+                    addNodes(event.pos[0], event.pos[1])
+                else:
+                    pass
+        
         update()
         draw()
     
