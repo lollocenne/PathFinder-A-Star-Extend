@@ -31,19 +31,39 @@ def addStartNode(x, y) -> None:
     aStar.startNode = {"x": x, "y": y, "state": "start", "neighbors": []}
     
     for node in aStar.nodes:
+        if node["state"] != "start":
+            for n in node["neighbors"]:
+                if n["state"] == "start":
+                    node["neighbors"].remove(n)
+                    break
+    
+    for node in aStar.nodes:
         if node["state"] == "start":
-            node = aStar.startNode
-            return None
+            aStar.nodes.remove(node)
+            break
+            
+    for node in aStar.activeNodes:
+        if node["state"] == "start":
+            aStar.activeNodes.remove(node)
+            break
     
     aStar.nodes.append(aStar.startNode)
+    aStar.activeNodes.append(aStar.startNode)
 
 def addEndNode(x, y) -> None:
     aStar.endNode = {"x": x, "y": y, "state": "target", "neighbors": []}
     
     for node in aStar.nodes:
+        if node["state"] != "target":
+            for n in node["neighbors"]:
+                if n["state"] == "target":
+                    node["neighbors"].remove(n)
+                    break
+    
+    for node in aStar.nodes:
         if node["state"] == "target":
-            node = aStar.endNode
-            return None
+            aStar.nodes.remove(node)
+            break
     
     aStar.nodes.append(aStar.endNode)
 
