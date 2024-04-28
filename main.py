@@ -62,8 +62,25 @@ def addRoad(x, y) -> None:
                 
                 del roadNode[0]
 
+grabbedNode = []
+def grab():
+    if pygame.mouse.get_pressed()[0]:
+        xMouse, yMouse = pygame.mouse.get_pos()
+        
+        if len(grabbedNode) == 0:
+            for node in aStar.nodes:
+                if sqrt(pow(node["x"] - xMouse, 2) + pow(node["y"] - yMouse, 2)) <= 10:
+                    grabbedNode.append(node)
+        
+        if len(grabbedNode) == 1:
+            grabbedNode[0]["x"] = xMouse
+            grabbedNode[0]["y"] = yMouse
+    elif len(grabbedNode) == 1:
+        del grabbedNode[0]
+
 def update():
-    pass
+    if buttons[6].active:
+        grab()
 
 def draw():
     WINDOW.fill((200, 200, 200))
