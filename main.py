@@ -28,12 +28,24 @@ def selectButton(x, y) -> None:
         button.active = button.press()
 
 def addStartNode(x, y) -> None:
-    aStar.startNode["x"] = x
-    aStar.startNode["y"] = y
+    aStar.startNode = {"x": x, "y": y, "state": "start", "neighbors": []}
+    
+    for node in aStar.nodes:
+        if node["state"] == "start":
+            node = aStar.startNode
+            return None
+    
+    aStar.nodes.append(aStar.startNode)
 
 def addEndNode(x, y) -> None:
-    aStar.endNode["x"] = x
-    aStar.endNode["y"] = y
+    aStar.endNode = {"x": x, "y": y, "state": "target", "neighbors": []}
+    
+    for node in aStar.nodes:
+        if node["state"] == "target":
+            node = aStar.endNode
+            return None
+    
+    aStar.nodes.append(aStar.endNode)
 
 def addNode(x, y) -> None:
     aStar.nodes.append({"x": x, "y": y, "state": None, "neighbors": [], "path": None})
@@ -48,9 +60,11 @@ def addNodes(x, y) -> None:
             elif button.txt == "Node":
                 addNode(x, y)
 
-
 roadNode = []
 def addRoad(x, y) -> None:
+    if len(aStar.nodes) <= 1:
+        return None
+    
     for node in aStar.nodes:
         if sqrt(pow(node["x"] - x, 2) + pow(node["y"] - y, 2)) <= 10:
             if len(roadNode) == 0:

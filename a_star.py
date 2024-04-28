@@ -4,11 +4,11 @@ from math import *
 #node = {"x": x, "y": y, "state": None, "neighbors": list[node], "path": list[node]}
 class Astar:
     def __init__(self):
-        self.startNode: dict = {"x": None, "y": None, "state": "start", "neighbors": []}
-        self.endNode: dict = {"x": None, "y": None, "state": "target", "neighbors": []}
+        self.startNode: dict = None
+        self.endNode: dict = None
         
-        self.nodes: list[dict] = [self.startNode, self.endNode]
-        self.activeNodes: list[dict] = [self.startNode]
+        self.nodes: list[dict] = []
+        self.activeNodes: list[dict] = []
     
     @staticmethod
     def g(node1: list[dict], node2: list[dict]) -> float:
