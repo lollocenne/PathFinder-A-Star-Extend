@@ -19,6 +19,13 @@ buttons[2].active = True
 
 aStar: Astar = Astar()
 
+def selectButton(x, y) -> None:
+    for button in buttons:
+        if button.active == True:
+            button.active = False
+        
+        button.active = button.press()
+
 def addStartNode(x, y) -> None:
     aStar.startNode["x"] = x
     aStar.startNode["y"] = y
@@ -83,7 +90,7 @@ def main():
                 if event.pos[1] > buttons[0].y + buttons[0].height + 10:
                     addNodes(event.pos[0], event.pos[1])
                 else:
-                    pass
+                    selectButton(event.pos[0], event.pos[1])
         
         update()
         draw()
