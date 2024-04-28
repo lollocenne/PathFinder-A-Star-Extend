@@ -28,7 +28,7 @@ def addEndNode(x, y) -> None:
     aStar.endNode["y"] = y
 
 def addNode(x, y) -> None:
-    pass
+    aStar.nodes.append({"x": x, "y": y, "state": None, "neighbors": [], "path": None})
 
 def addNodes(x, y) -> None:
     for button in buttons:
