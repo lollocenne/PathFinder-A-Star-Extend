@@ -20,5 +20,5 @@ class Astar:
     def f(self, node1, node2) -> float:
         return self.g(node1, node2) + self.h(node2)
     
-    def searchPath() -> None:
+    def searchPath(self) -> None:
         pass

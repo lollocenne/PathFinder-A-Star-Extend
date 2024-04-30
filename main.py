@@ -20,6 +20,8 @@ buttons[2].active = True
 
 aStar: Astar = Astar()
 
+start = False
+
 def selectButton(x, y) -> None:
     for button in buttons:
         if button.active == True:
@@ -134,6 +136,11 @@ def delete(x, y) -> None:
                 return
 
 def update():
+    start = buttons[0].active
+    
+    if start:
+        aStar.searchPath()
+    
     if buttons[6].active:
         grab()
 
