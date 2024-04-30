@@ -112,6 +112,27 @@ def grab():
     elif len(grabbedNode) == 1:
         del grabbedNode[0]
 
+def delete(x, y) -> None:
+    for node in aStar.nodes:
+        if sqrt(pow(x - node["x"],2) + pow(y - node["y"], 2)) <= 10:
+            for n in node["neighbors"]:
+                n["neighbors"].remove(node)
+                
+            aStar.nodes.remove(node)
+            return
+    
+    #distance point-rect: abs(a*x + b*y + c)/sqrt(pow(a, 2) + pow(b, 2))
+    for node in aStar.nodes:
+        for n in node["neighbors"]:
+            a = (node["y"] - n["y"])/(node["x"] - n["x"])
+            c = node["y"] - a * node["x"]
+            
+            if abs(a*x - y + c)/sqrt(pow(a, 2) + 1) <= 10:
+                node["neighbors"].remove(n)
+                n["neighbors"].remove(node)
+                
+                return
+
 def update():
     if buttons[6].active:
         grab()
@@ -168,6 +189,8 @@ def main():
                 if event.pos[1] > buttons[0].y + buttons[0].height + 10:
                     if buttons[5].active:
                         addRoad(event.pos[0], event.pos[1])
+                    elif buttons[7].active:
+                        delete(event.pos[0], event.pos[1])
                     else:
                         addNodes(event.pos[0], event.pos[1])
                 else:
