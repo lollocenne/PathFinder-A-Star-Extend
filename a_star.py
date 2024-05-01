@@ -20,5 +20,56 @@ class Astar:
     def f(self, node1, node2) -> float:
         return self.g(node1, node2) + self.h(node2)
     
+    def updateActiveNodes(self) -> None:
+        for node in self.activeNodes:
+            numActiveNode = 0
+            for n in node["neighbors"]:
+                if n["state"] in {"active", "start"}:
+                    numActiveNode += 1
+            
+            if numActiveNode == len(node["neighbors"]):
+                node["state"] == "used"
+                self.activeNodes.remove(node)
+            
+            if not node["state"] in {"active", "start"}:
+                self.activeNodes.remove(node)
+    
     def searchPath(self) -> None:
-        pass
+        if not self.complete():
+            self.updateActiveNodes()
+            
+            possibleNode: dict = None
+            possibleFValue: int = None
+            Node1: dict = None
+            
+            for node in self.activeNodes:
+                for neighbor in node["neighbors"]:
+                    if not neighbor["state"] in {"active", "start"}:
+                        if possibleNode == None:
+                            possibleNode = neighbor
+                            possibleFValue = self.f(node, neighbor)
+                            Node1 = node
+                        else:
+                            if self.f(node, neighbor) < possibleFValue:
+                                possibleNode = neighbor
+                                possibleFValue = self.f(node, neighbor)
+                                Node1 = node
+            
+            possibleNode["state"] = "active"
+            possibleNode["path"] = Node1["path"].copy()
+            possibleNode["path"].append(Node1)
+            
+            self.activeNodes.append(possibleNode)
+    
+    def complete(self):
+        for neighbor in self.endNode["neighbors"]:
+            if neighbor["state"] in {"active", "start", "path"}:
+                self.endNode["path"] = neighbor["path"].copy()
+                self.endNode["path"].append(neighbor)
+                self.endNode["state"] = "path"
+                for node in self.endNode["path"]:
+                    node["state"] = "path"
+                
+                return True
+        
+        return False

@@ -30,7 +30,7 @@ def selectButton(x, y) -> None:
         button.active = button.press()
 
 def addStartNode(x, y) -> None:
-    aStar.startNode = {"x": x, "y": y, "state": "start", "neighbors": []}
+    aStar.startNode = {"x": x, "y": y, "state": "start", "neighbors": [], "path": []}
     
     for node in aStar.nodes:
         if node["state"] != "start":
@@ -53,7 +53,7 @@ def addStartNode(x, y) -> None:
     aStar.activeNodes.append(aStar.startNode)
 
 def addEndNode(x, y) -> None:
-    aStar.endNode = {"x": x, "y": y, "state": "target", "neighbors": []}
+    aStar.endNode = {"x": x, "y": y, "state": "target", "neighbors": [], "path": None}
     
     for node in aStar.nodes:
         if node["state"] != "target":
@@ -155,14 +155,15 @@ def draw():
     
     for node in aStar.nodes:
         for n in node["neighbors"]:
-            if node["state"] == n["state"] == "active":
-                pygame.draw.line(WINDOW, (255, 255, 0), (node["x"], node["y"]), (n["x"], n["y"]), 5)
+            if node["state"] == "active":
+                if n["state"] in {"start", "active", "target"}:
+                    pygame.draw.line(WINDOW, (255, 255, 0), (node["x"], node["y"]), (n["x"], n["y"]), 5)
             elif node["state"] == n["state"] == "path":
                 pygame.draw.line(WINDOW, (0, 100, 0), (node["x"], node["y"]), (n["x"], n["y"]), 5)
             else:
                 pygame.draw.line(WINDOW, (0, 0, 0), (node["x"], node["y"]), (n["x"], n["y"]), 5)
     
-    for node in aStar.nodes:        
+    for node in aStar.nodes:
         if node["state"] == None:
             pygame.draw.circle(WINDOW, (0, 255, 255), (node["x"], node["y"]), 10)
         elif node["state"] == "active":
