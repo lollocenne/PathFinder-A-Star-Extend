@@ -20,8 +20,6 @@ buttons[2].active = True
 
 aStar: Astar = Astar()
 
-start = False
-
 def selectButton(x, y) -> None:
     for button in buttons:
         if button.active == True:
@@ -135,8 +133,11 @@ def delete(x, y) -> None:
                 
                 return
 
-def update():
-    start = buttons[0].active
+def update():    
+    if aStar.startNode != None and aStar.endNode != None:
+        start = buttons[0].active
+    else:
+        start = False
     
     if start:
         aStar.searchPath()

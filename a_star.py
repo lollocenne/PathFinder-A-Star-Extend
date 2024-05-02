@@ -43,6 +43,9 @@ class Astar:
             Node1: dict = None
             
             for node in self.activeNodes:
+                if len(node["neighbors"]) == 0:
+                    continue
+                
                 for neighbor in node["neighbors"]:
                     if not neighbor["state"] in {"active", "start", "target"}:
                         if possibleNode == None:
@@ -54,6 +57,9 @@ class Astar:
                                 possibleNode = neighbor
                                 possibleFValue = self.f(node, neighbor)
                                 Node1 = node
+            
+            if possibleNode == None or possibleFValue == None or Node1 == Node1:
+                return
             
             possibleNode["state"] = "active"
             possibleNode["path"] = Node1["path"].copy()
