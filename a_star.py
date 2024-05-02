@@ -44,7 +44,7 @@ class Astar:
             
             for node in self.activeNodes:
                 for neighbor in node["neighbors"]:
-                    if not neighbor["state"] in {"active", "start"}:
+                    if not neighbor["state"] in {"active", "start", "target"}:
                         if possibleNode == None:
                             possibleNode = neighbor
                             possibleFValue = self.f(node, neighbor)
@@ -61,12 +61,13 @@ class Astar:
             
             self.activeNodes.append(possibleNode)
     
-    def complete(self):
+    def complete(self) -> bool:
         for neighbor in self.endNode["neighbors"]:
             if neighbor["state"] in {"active", "start", "path"}:
                 self.endNode["path"] = neighbor["path"].copy()
                 self.endNode["path"].append(neighbor)
                 self.endNode["state"] = "path"
+                
                 for node in self.endNode["path"]:
                     node["state"] = "path"
                 
