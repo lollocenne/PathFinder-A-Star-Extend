@@ -1,7 +1,7 @@
 # PathFinder-A-Star-Extend
 Exmple of the A star algorithm similar to my other [PathFinder A Star](https://github.com/lollocenne/PathFinder-A-Star)
 
-##Buttons
+## Buttons
 - Start: Press it to start searching the path
 - End: Press it to end searching the path
 - Start Node: (Active by default) If active you can add the start node (only 1 can be placed)
