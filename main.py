@@ -20,65 +20,22 @@ buttons[2].active = True
 
 aStar: Astar = Astar()
 
-def selectButton(x, y) -> None:
+def selectButton() -> None:
     for button in buttons:
-        if button.active == True:
+        if button.active:
             button.active = False
         
         button.active = button.press()
-
-def addStartNode(x, y) -> None:
-    aStar.startNode = {"x": x, "y": y, "state": "start", "neighbors": [], "path": []}
-    
-    for node in aStar.nodes:
-        if node["state"] != "start":
-            for n in node["neighbors"]:
-                if n["state"] == "start":
-                    node["neighbors"].remove(n)
-                    break
-    
-    for node in aStar.nodes:
-        if node["state"] == "start":
-            aStar.nodes.remove(node)
-            break
-            
-    for node in aStar.activeNodes:
-        if node["state"] == "start":
-            aStar.activeNodes.remove(node)
-            break
-    
-    aStar.nodes.append(aStar.startNode)
-    aStar.activeNodes.append(aStar.startNode)
-
-def addEndNode(x, y) -> None:
-    aStar.endNode = {"x": x, "y": y, "state": "target", "neighbors": [], "path": None}
-    
-    for node in aStar.nodes:
-        if node["state"] != "target":
-            for n in node["neighbors"]:
-                if n["state"] == "target":
-                    node["neighbors"].remove(n)
-                    break
-    
-    for node in aStar.nodes:
-        if node["state"] == "target":
-            aStar.nodes.remove(node)
-            break
-    
-    aStar.nodes.append(aStar.endNode)
-
-def addNode(x, y) -> None:
-    aStar.nodes.append({"x": x, "y": y, "state": None, "neighbors": [], "path": None})
 
 def addNodes(x, y) -> None:
     for button in buttons:
         if button.active == True:
             if button.txt == "Start Node":
-                addStartNode(x, y)
+                aStar.addStartNode(x, y)
             elif button.txt == "End Node":
-                addEndNode(x, y)
+                aStar.addEndNode(x, y)
             elif button.txt == "Node":
-                addNode(x, y)
+                aStar.addNode(x, y)
 
 roadNode = []
 def addRoad(x, y) -> None:
@@ -90,9 +47,8 @@ def addRoad(x, y) -> None:
             if len(roadNode) == 0:
                 roadNode.append(node)
             else:
-                if roadNode[0] != node and not node in roadNode[0]["neighbors"]:
-                    roadNode[0]["neighbors"].append(node)
-                    node["neighbors"].append(roadNode[0])
+                if roadNode[0] != node:
+                    aStar.createConnection(node, roadNode[0])
                 
                 del roadNode[0]
 
@@ -115,10 +71,7 @@ def grab():
 def delete(x, y) -> None:
     for node in aStar.nodes:
         if sqrt(pow(x - node["x"],2) + pow(y - node["y"], 2)) <= 10:
-            for n in node["neighbors"]:
-                n["neighbors"].remove(node)
-                
-            aStar.nodes.remove(node)
+            aStar.removeNode(node)
             return
     
     #distance point-line: abs(a*x + b*y + c)/sqrt(pow(a, 2) + pow(b, 2))
@@ -128,9 +81,7 @@ def delete(x, y) -> None:
             c = node["y"] - a * node["x"]
             
             if abs(a*x - y + c)/sqrt(pow(a, 2) + 1) <= 10:
-                node["neighbors"].remove(n)
-                n["neighbors"].remove(node)
-                
+                aStar.removeConnection(node, n)
                 return
 
 def update():    
@@ -206,7 +157,7 @@ def main():
                     else:
                         addNodes(event.pos[0], event.pos[1])
                 else:
-                    selectButton(event.pos[0], event.pos[1])
+                    selectButton()
         
         update()
         draw()

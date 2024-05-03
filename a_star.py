@@ -4,11 +4,85 @@ from math import *
 #node = {"x": x, "y": y, "state": None, "neighbors": list[node], "path": list[node]}
 class Astar:
     def __init__(self):
-        self.startNode: dict = None
-        self.endNode: dict = None
+        self.startNode: dict[str: int, str: str, str: list[dict]] = None
+        self.endNode: dict[str: int, str: str, str: list[dict]] = None
         
-        self.nodes: list[dict] = []
-        self.activeNodes: list[dict] = []
+        self.nodes: list[dict[str: int, str: str, str: list[dict]]] = []
+        self.activeNodes: list[dict[str: int, str: str, str: list[dict]]] = []
+    
+    def addStartNode(self,x , y) -> None:
+        self.startNode = {"x": x, "y": y, "state": "start", "neighbors": [], "path": []}
+        
+        for node in self.nodes:
+            if node["state"] == "start":
+                self.nodes.remove(node)
+                break
+        
+        for node in self.nodes:
+            if node["state"] != "start":
+                for n in node["neighbors"]:
+                    if n["state"] == "start":
+                        node["neighbors"].remove(n)
+                        break
+        
+        for node in self.activeNodes:
+            if node["state"] == "start":
+                self.activeNodes.remove(node)
+                break
+        
+        self.nodes.append(self.startNode)
+        self.activeNodes.append(self.startNode)
+    
+    def addEndNode(self,x , y) -> None:
+        self.endNode = {"x": x, "y": y, "state": "target", "neighbors": [], "path": None}
+        
+        for node in self.nodes:
+            if node["state"] == "target":
+                self.nodes.remove(node)
+                break
+        
+        for node in self.nodes:
+            if node["state"] != "target":
+                for n in node["neighbors"]:
+                    if n["state"] == "target":
+                        node["neighbors"].remove(n)
+                        break
+        
+        self.nodes.append(self.endNode)
+    
+    def addNode(self, x, y) -> None:
+        self.nodes.append({"x": x, "y": y, "state": None, "neighbors": [], "path": None})
+    
+    @staticmethod
+    def createConnection(node1, node2) -> None:
+        if node1 in node2["neighbors"]:
+            return
+        
+        node1["neighbors"].append(node2)
+        node2["neighbors"].append(node1)
+    
+    def removeNode(self, node) -> None:
+        for n in node["neighbors"]:
+                n["neighbors"].remove(node)
+        
+        self.nodes.remove(node)
+        
+        if node in self.activeNodes:
+            self.activeNodes.remove(node)
+        
+        if node["state"] == "start":
+            self.startNode = None
+            
+        if node["state"] == "target":
+            self.endNode = None
+    
+    @staticmethod
+    def removeConnection(node1, node2) -> None:
+        if not (node1 in node2["neighbors"] and node2 in node1["neighbors"]):
+            return
+        
+        node1["neighbors"].remove(node2)
+        node2["neighbors"].remove(node1)
     
     @staticmethod
     def g(node1: list[dict], node2: list[dict]) -> float:
