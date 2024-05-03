@@ -153,7 +153,6 @@ def draw():
     
     if len(roadNode) == 1:
         pygame.draw.line(WINDOW, (0, 0, 0), (roadNode[0]["x"], roadNode[0]["y"]), (pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1]), 5)
-    
     for node in aStar.nodes:
         for n in node["neighbors"]:
             if node["state"] == "active":
@@ -163,6 +162,12 @@ def draw():
                 pygame.draw.line(WINDOW, (0, 100, 0), (node["x"], node["y"]), (n["x"], n["y"]), 5)
             else:
                 pygame.draw.line(WINDOW, (0, 0, 0), (node["x"], node["y"]), (n["x"], n["y"]), 5)
+    
+    if aStar.startNode != None:
+        pygame.draw.circle(WINDOW, (0, 0, 255), (aStar.startNode["x"], aStar.startNode["y"]), 13)
+    
+    if aStar.endNode != None:
+        pygame.draw.circle(WINDOW, (255, 0, 0), (aStar.endNode["x"], aStar.endNode["y"]), 13)
     
     for node in aStar.nodes:
         if node["state"] == None:
@@ -174,11 +179,9 @@ def draw():
         elif node["state"] == "path":
             pygame.draw.circle(WINDOW, (0, 100, 0), (node["x"], node["y"]), 10)
         elif node["state"] == "start":
-            if node["x"] != None and node["y"] != None:
-                pygame.draw.circle(WINDOW, (0, 0, 255), (node["x"], node["y"]), 10)
+            pygame.draw.circle(WINDOW, (0, 0, 255), (node["x"], node["y"]), 10)
         elif node["state"] == "target":
-            if node["x"] != None and node["y"] != None:
-                pygame.draw.circle(WINDOW, (255, 0, 0), (node["x"], node["y"]), 10)
+            pygame.draw.circle(WINDOW, (255, 0, 0), (node["x"], node["y"]), 10)
     
     pygame.display.update()
 
