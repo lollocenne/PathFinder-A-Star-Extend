@@ -116,7 +116,7 @@ def draw():
     for node in aStar.nodes:
         for n in node["neighbors"]:
             if node["state"] == "active":
-                if n["state"] in {"start", "active", "target"}:
+                if n["state"] in ("start", "active", "target"):
                     pygame.draw.line(WINDOW, (255, 255, 0), (node["x"], node["y"]), (n["x"], n["y"]), LINE_SIZE)
             elif node["state"] == n["state"] == "path":
                 pygame.draw.line(WINDOW, (0, 100, 0), (node["x"], node["y"]), (n["x"], n["y"]), LINE_SIZE)

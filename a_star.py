@@ -98,14 +98,14 @@ class Astar:
         for node in self.activeNodes:
             numActiveNode = 0
             for n in node["neighbors"]:
-                if n["state"] in {"active", "start"}:
+                if n["state"] in ("active", "start"):
                     numActiveNode += 1
             
             if numActiveNode == len(node["neighbors"]):
                 node["state"] == "used"
                 self.activeNodes.remove(node)
             
-            if not node["state"] in {"active", "start"}:
+            if not node["state"] in ("active", "start"):
                 self.activeNodes.remove(node)
     
     def searchPath(self) -> None:
@@ -121,7 +121,7 @@ class Astar:
                     continue
                 
                 for neighbor in node["neighbors"]:
-                    if not neighbor["state"] in {"active", "start", "target"}:
+                    if not neighbor["state"] in ("active", "start", "target"):
                         if possibleNode == None:
                             possibleNode = neighbor
                             possibleFValue = self.f(node, neighbor)
@@ -143,7 +143,7 @@ class Astar:
     
     def complete(self) -> bool:
         for neighbor in self.endNode["neighbors"]:
-            if neighbor["state"] in {"active", "start", "path"}:
+            if neighbor["state"] in ("active", "start", "path"):
                 self.endNode["path"] = neighbor["path"].copy()
                 self.endNode["path"].append(neighbor)
                 self.endNode["state"] = "path"
