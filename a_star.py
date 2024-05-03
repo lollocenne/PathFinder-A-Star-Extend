@@ -58,7 +58,7 @@ class Astar:
                                 possibleFValue = self.f(node, neighbor)
                                 Node1 = node
             
-            if possibleNode == None or possibleFValue == None or Node1 == Node1:
+            if possibleNode == None or possibleFValue == None or Node1 == None:
                 return
             
             possibleNode["state"] = "active"
