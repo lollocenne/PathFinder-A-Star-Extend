@@ -18,6 +18,9 @@ for i in range(len(buttonsText)):
 
 buttons[2].active = True
 
+NODE_SIZE: int = 10
+LINE_SIZE: int = 5
+
 aStar: Astar = Astar()
 
 def selectButton() -> None:
@@ -59,7 +62,7 @@ def grab():
         
         if len(grabbedNode) == 0:
             for node in aStar.nodes:
-                if sqrt(pow(node["x"] - xMouse, 2) + pow(node["y"] - yMouse, 2)) <= 10:
+                if sqrt(pow(node["x"] - xMouse, 2) + pow(node["y"] - yMouse, 2)) <= NODE_SIZE:
                     grabbedNode.append(node)
         
         if len(grabbedNode) == 1:
@@ -70,7 +73,7 @@ def grab():
 
 def delete(x, y) -> None:
     for node in aStar.nodes:
-        if sqrt(pow(x - node["x"],2) + pow(y - node["y"], 2)) <= 10:
+        if sqrt(pow(x - node["x"],2) + pow(y - node["y"], 2)) <= NODE_SIZE:
             aStar.removeNode(node)
             return
     
@@ -86,7 +89,7 @@ def delete(x, y) -> None:
             
             if (n["x"] <= x and node["x"] >= x) or (node["x"] <= x and n["x"] >= x):
                 if (n["y"] <= y and node["y"] >= y) or (node["y"] <= y and n["y"] >= y):
-                    if abs(a*x - y + c)/sqrt(pow(a, 2) + 1) <= 10:
+                    if abs(a*x - y + c)/sqrt(pow(a, 2) + 1) <= LINE_SIZE + 5:
                         aStar.removeConnection(node, n)
                         return
 
@@ -109,36 +112,36 @@ def draw():
         b.draw()
     
     if len(roadNode) == 1:
-        pygame.draw.line(WINDOW, (0, 0, 0), (roadNode[0]["x"], roadNode[0]["y"]), (pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1]), 5)
+        pygame.draw.line(WINDOW, (0, 0, 0), (roadNode[0]["x"], roadNode[0]["y"]), (pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1]), LINE_SIZE)
     for node in aStar.nodes:
         for n in node["neighbors"]:
             if node["state"] == "active":
                 if n["state"] in {"start", "active", "target"}:
-                    pygame.draw.line(WINDOW, (255, 255, 0), (node["x"], node["y"]), (n["x"], n["y"]), 5)
+                    pygame.draw.line(WINDOW, (255, 255, 0), (node["x"], node["y"]), (n["x"], n["y"]), LINE_SIZE)
             elif node["state"] == n["state"] == "path":
-                pygame.draw.line(WINDOW, (0, 100, 0), (node["x"], node["y"]), (n["x"], n["y"]), 5)
+                pygame.draw.line(WINDOW, (0, 100, 0), (node["x"], node["y"]), (n["x"], n["y"]), LINE_SIZE)
             else:
-                pygame.draw.line(WINDOW, (0, 0, 0), (node["x"], node["y"]), (n["x"], n["y"]), 5)
+                pygame.draw.line(WINDOW, (0, 0, 0), (node["x"], node["y"]), (n["x"], n["y"]), LINE_SIZE)
     
     if aStar.startNode != None:
-        pygame.draw.circle(WINDOW, (0, 0, 255), (aStar.startNode["x"], aStar.startNode["y"]), 13)
+        pygame.draw.circle(WINDOW, (0, 0, 255), (aStar.startNode["x"], aStar.startNode["y"]), NODE_SIZE + 3)
     
     if aStar.endNode != None:
-        pygame.draw.circle(WINDOW, (255, 0, 0), (aStar.endNode["x"], aStar.endNode["y"]), 13)
+        pygame.draw.circle(WINDOW, (255, 0, 0), (aStar.endNode["x"], aStar.endNode["y"]), NODE_SIZE + 3)
     
     for node in aStar.nodes:
         if node["state"] == None:
-            pygame.draw.circle(WINDOW, (0, 255, 255), (node["x"], node["y"]), 10)
+            pygame.draw.circle(WINDOW, (0, 255, 255), (node["x"], node["y"]), NODE_SIZE)
         elif node["state"] == "active":
-            pygame.draw.circle(WINDOW, (255, 255, 0), (node["x"], node["y"]), 10)
+            pygame.draw.circle(WINDOW, (255, 255, 0), (node["x"], node["y"]), NODE_SIZE)
         elif node["state"] == "used":
-            pygame.draw.circle(WINDOW, (255, 0, 255), (node["x"], node["y"]), 10)
+            pygame.draw.circle(WINDOW, (255, 0, 255), (node["x"], node["y"]), NODE_SIZE)
         elif node["state"] == "path":
-            pygame.draw.circle(WINDOW, (0, 100, 0), (node["x"], node["y"]), 10)
+            pygame.draw.circle(WINDOW, (0, 100, 0), (node["x"], node["y"]), NODE_SIZE)
         elif node["state"] == "start":
-            pygame.draw.circle(WINDOW, (0, 0, 255), (node["x"], node["y"]), 10)
+            pygame.draw.circle(WINDOW, (0, 0, 255), (node["x"], node["y"]), NODE_SIZE)
         elif node["state"] == "target":
-            pygame.draw.circle(WINDOW, (255, 0, 0), (node["x"], node["y"]), 10)
+            pygame.draw.circle(WINDOW, (255, 0, 0), (node["x"], node["y"]), NODE_SIZE)
     
     pygame.display.update()
 
