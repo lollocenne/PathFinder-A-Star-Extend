@@ -121,7 +121,7 @@ def delete(x, y) -> None:
             aStar.nodes.remove(node)
             return
     
-    #distance point-rect: abs(a*x + b*y + c)/sqrt(pow(a, 2) + pow(b, 2))
+    #distance point-line: abs(a*x + b*y + c)/sqrt(pow(a, 2) + pow(b, 2))
     for node in aStar.nodes:
         for n in node["neighbors"]:
             a = (node["y"] - n["y"])/(node["x"] - n["x"])
