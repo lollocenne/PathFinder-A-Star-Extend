@@ -77,12 +77,18 @@ def delete(x, y) -> None:
     #distance point-line: abs(a*x + b*y + c)/sqrt(pow(a, 2) + pow(b, 2))
     for node in aStar.nodes:
         for n in node["neighbors"]:
-            a = (node["y"] - n["y"])/(node["x"] - n["x"])
+            if (node["x"] - n["x"]) != 0:
+                a = (node["y"] - n["y"])/(node["x"] - n["x"])
+            else:
+                a = (node["y"] - n["y"])/((node["x"] + 0.0001) - n["x"]) #approssimate the line to a vertical line
+            
             c = node["y"] - a * node["x"]
             
-            if abs(a*x - y + c)/sqrt(pow(a, 2) + 1) <= 10:
-                aStar.removeConnection(node, n)
-                return
+            if (n["x"] <= x and node["x"] >= x) or (node["x"] <= x and n["x"] >= x):
+                if (n["y"] <= y and node["y"] >= y) or (node["y"] <= y and n["y"] >= y):
+                    if abs(a*x - y + c)/sqrt(pow(a, 2) + 1) <= 10:
+                        aStar.removeConnection(node, n)
+                        return
 
 def update():    
     if aStar.startNode != None and aStar.endNode != None:
