@@ -2,7 +2,7 @@ import pygame
 
 
 class Button():
-    def __init__(self, window: pygame.Surface, x: float, text: str = ""):
+    def __init__(self, window: pygame.Surface, x: int, text: str = ""):
         self.WINDOW = window
         self.WINDOW_WIDTH: int = window.get_width()
         self.WINDOW_HEIGHT: int = window.get_height()
@@ -10,23 +10,23 @@ class Button():
         self.x = x
         self.y = 0
         
-        self.width = window.get_width()/8
-        self.height = 20
+        self.width: float = window.get_width()/8
+        self.height: int = 20
         
         self.string = text
         
-        self.color = (50, 50, 50)
-        self.colorActive = (100, 100, 100)
-        self.textColor = (255, 255, 255)
+        self.color: tuple[int] = (50, 50, 50)
+        self.colorActive: tuple[int] = (100, 100, 100)
+        self.textColor: tuple[int] = (255, 255, 255)
         
         self.FONT = pygame.font.SysFont("comicsan", 20)
-        self.text = self.FONT.render(self.string, True, self.textColor)
+        self.text: pygame.Surface = self.FONT.render(self.string, True, self.textColor)
         
-        self.txt = text
+        self.txt: str = text
         
-        self.hitbox = pygame.Rect(self.x, self.y, self.width, self.height)
+        self.hitbox: pygame.Rect = pygame.Rect(self.x, self.y, self.width, self.height)
         
-        self.active = False
+        self.active: bool = False
     
     def press(self) -> bool:
         if pygame.mouse.get_pressed()[0]:

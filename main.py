@@ -16,6 +16,8 @@ buttons: list[Button] = []
 for i in range(len(buttonsText)):
     buttons.append(Button(WINDOW, i*WIDTH/8 + i, buttonsText[i]))
 
+buttons: tuple[Button] = tuple(buttons)
+
 buttons[2].active = True
 
 NODE_SIZE: int = 10
@@ -32,7 +34,7 @@ def selectButton() -> None:
 
 def addNodes(x, y) -> None:
     for button in buttons:
-        if button.active == True:
+        if button.active:
             if button.txt == "Start Node":
                 aStar.addStartNode(x, y)
             elif button.txt == "End Node":
@@ -138,10 +140,6 @@ def draw():
             pygame.draw.circle(WINDOW, (255, 0, 255), (node["x"], node["y"]), NODE_SIZE)
         elif node["state"] == "path":
             pygame.draw.circle(WINDOW, (0, 100, 0), (node["x"], node["y"]), NODE_SIZE)
-        elif node["state"] == "start":
-            pygame.draw.circle(WINDOW, (0, 0, 255), (node["x"], node["y"]), NODE_SIZE)
-        elif node["state"] == "target":
-            pygame.draw.circle(WINDOW, (255, 0, 0), (node["x"], node["y"]), NODE_SIZE)
     
     pygame.display.update()
 
