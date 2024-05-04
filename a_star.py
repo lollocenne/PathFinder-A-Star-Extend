@@ -94,24 +94,28 @@ class Astar:
     def f(self, node1, node2) -> float:
         return self.g(node1, node2) + self.h(node2)
     
+    @staticmethod
+    def isUsed(node) -> bool:
+        for n in node["neighbors"]:
+            if not n["state"] in ("used", "active", "start"):
+                print(f'{node["state"]} ; {n["state"]}')
+                return False
+        
+        return True
+    
     def updateActiveNodes(self) -> None:
         for node in self.activeNodes:
-            numActiveNode = 0
-            for n in node["neighbors"]:
-                if n["state"] in ("active", "start"):
-                    numActiveNode += 1
-            
-            if numActiveNode == len(node["neighbors"]):
-                node["state"] == "used"
+            print(node["state"])
+            if self.isUsed(node):
+                node["state"] = "used"
                 self.activeNodes.remove(node)
-            
+        
+        for node in self.activeNodes:
             if not node["state"] in ("active", "start"):
                 self.activeNodes.remove(node)
     
     def searchPath(self) -> None:
-        if not self.complete():
-            self.updateActiveNodes()
-            
+        if not self.complete():            
             possibleNode: dict = None
             possibleFValue: int = None
             Node1: dict = None
@@ -121,7 +125,7 @@ class Astar:
                     continue
                 
                 for neighbor in node["neighbors"]:
-                    if not neighbor["state"] in ("active", "start", "target"):
+                    if not neighbor["state"] in ("used", "active", "start", "target"):
                         if possibleNode == None:
                             possibleNode = neighbor
                             possibleFValue = self.f(node, neighbor)
@@ -140,6 +144,8 @@ class Astar:
             possibleNode["path"].append(Node1)
             
             self.activeNodes.append(possibleNode)
+            
+            self.updateActiveNodes()
     
     def complete(self) -> bool:
         for neighbor in self.endNode["neighbors"]:
