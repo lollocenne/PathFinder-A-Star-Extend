@@ -98,14 +98,12 @@ class Astar:
     def isUsed(node) -> bool:
         for n in node["neighbors"]:
             if not n["state"] in ("used", "active", "start"):
-                print(f'{node["state"]} ; {n["state"]}')
                 return False
         
         return True
     
     def updateActiveNodes(self) -> None:
         for node in self.activeNodes:
-            print(node["state"])
             if self.isUsed(node):
                 node["state"] = "used"
                 self.activeNodes.remove(node)
@@ -157,6 +155,8 @@ class Astar:
                 for node in self.endNode["path"]:
                     node["state"] = "path"
                 
+                self.updateActiveNodes()
                 return True
         
+        self.updateActiveNodes()
         return False
