@@ -95,6 +95,22 @@ def delete(x, y) -> None:
                         aStar.removeConnection(node, n)
                         return
 
+def endSearch() -> None:
+    for node in aStar.nodes:
+        node["state"] = None
+        node["path"] = None
+    
+    aStar.activeNodes = []
+    
+    if aStar.startNode != None:
+        aStar.startNode["state"] = "start"
+        aStar.startNode["path"] = []
+        
+        aStar.activeNodes.append(aStar.startNode)
+    
+    if aStar.endNode != None:
+        aStar.endNode["state"] = "target"
+
 def update():    
     if aStar.startNode != None and aStar.endNode != None:
         start = buttons[0].active
@@ -106,6 +122,10 @@ def update():
     
     if buttons[6].active:
         grab()
+    
+    if buttons[1].active:
+        endSearch()
+        buttons[1].active = False
 
 def draw():
     WINDOW.fill((200, 200, 200))
