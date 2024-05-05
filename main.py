@@ -1,6 +1,6 @@
 import pygame
-from button import Button
-from a_star import Astar
+from button import *
+from a_star import *
 from math import *
 
 pygame.font.init()
@@ -42,13 +42,13 @@ def addNodes(x, y) -> None:
             elif button.txt == "Node":
                 aStar.addNode(x, y)
 
-roadNode = []
+roadNode: list[Node] = []
 def addRoad(x, y) -> None:
     if len(aStar.nodes) <= 1:
         return None
     
     for node in aStar.nodes:
-        if sqrt(pow(node["x"] - x, 2) + pow(node["y"] - y, 2)) <= 10:
+        if sqrt(pow(node.x - x, 2) + pow(node.y - y, 2)) <= 10:
             if len(roadNode) == 0:
                 roadNode.append(node)
             else:
@@ -57,59 +57,59 @@ def addRoad(x, y) -> None:
                 
                 del roadNode[0]
 
-grabbedNode = []
+grabbedNode: list[Node] = []
 def grab():
     if pygame.mouse.get_pressed()[0]:
         xMouse, yMouse = pygame.mouse.get_pos()
         
         if len(grabbedNode) == 0:
             for node in aStar.nodes:
-                if sqrt(pow(node["x"] - xMouse, 2) + pow(node["y"] - yMouse, 2)) <= NODE_SIZE:
+                if sqrt(pow(node.x - xMouse, 2) + pow(node.y - yMouse, 2)) <= NODE_SIZE:
                     grabbedNode.append(node)
         
         if len(grabbedNode) == 1:
-            grabbedNode[0]["x"] = xMouse
-            grabbedNode[0]["y"] = yMouse
+            grabbedNode[0].x = xMouse
+            grabbedNode[0].y = yMouse
     elif len(grabbedNode) == 1:
         del grabbedNode[0]
 
 def delete(x, y) -> None:
     for node in aStar.nodes:
-        if sqrt(pow(x - node["x"],2) + pow(y - node["y"], 2)) <= NODE_SIZE:
+        if sqrt(pow(x - node.x, 2) + pow(y - node.y, 2)) <= NODE_SIZE:
             aStar.removeNode(node)
             return
     
     #distance point-line: abs(a*x + b*y + c)/sqrt(pow(a, 2) + pow(b, 2))
     for node in aStar.nodes:
-        for n in node["neighbors"]:
-            if (node["x"] - n["x"]) != 0:
-                a = (node["y"] - n["y"])/(node["x"] - n["x"])
+        for n in node.neighbors:
+            if (node.x - n.x) != 0:
+                a = (node.y - n.y)/(node.x - n.x)
             else:
-                a = (node["y"] - n["y"])/((node["x"] + 0.0001) - n["x"]) #approssimate the line to a vertical line
+                a = (node.y - n.y)/((node.x + 0.0001) - n.x) #approssimate the line to a vertical line
             
-            c = node["y"] - a * node["x"]
+            c = node.y - a * node.x
             
-            if (n["x"] <= x and node["x"] >= x) or (node["x"] <= x and n["x"] >= x):
-                if (n["y"] <= y and node["y"] >= y) or (node["y"] <= y and n["y"] >= y):
+            if (n.x <= x and node.x >= x) or (node.x <= x and n.x >= x):
+                if (n.y <= y and node.y >= y) or (node.y <= y and n.y >= y):
                     if abs(a*x - y + c)/sqrt(pow(a, 2) + 1) <= LINE_SIZE + 5:
                         aStar.removeConnection(node, n)
                         return
 
 def endSearch() -> None:
     for node in aStar.nodes:
-        node["state"] = None
-        node["path"] = None
+        node.state = None
+        node.path = None
     
     aStar.activeNodes = []
     
     if aStar.startNode != None:
-        aStar.startNode["state"] = "start"
-        aStar.startNode["path"] = []
+        aStar.startNode.state = "start"
+        aStar.startNode.path = []
         
         aStar.activeNodes.append(aStar.startNode)
     
     if aStar.endNode != None:
-        aStar.endNode["state"] = "target"
+        aStar.endNode.state = "target"
 
 def update():    
     if aStar.startNode != None and aStar.endNode != None:
@@ -134,32 +134,32 @@ def draw():
         b.draw()
     
     if len(roadNode) == 1:
-        pygame.draw.line(WINDOW, (0, 0, 0), (roadNode[0]["x"], roadNode[0]["y"]), (pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1]), LINE_SIZE)
+        pygame.draw.line(WINDOW, (0, 0, 0), (roadNode[0].x, roadNode[0].y), (pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1]), LINE_SIZE)
     for node in aStar.nodes:
-        for n in node["neighbors"]:
-            if node["state"] == "active":
-                if n["state"] in ("start", "active", "target"):
-                    pygame.draw.line(WINDOW, (255, 255, 0), (node["x"], node["y"]), (n["x"], n["y"]), LINE_SIZE)
-            elif node["state"] == n["state"] == "path":
-                pygame.draw.line(WINDOW, (0, 100, 0), (node["x"], node["y"]), (n["x"], n["y"]), LINE_SIZE)
+        for n in node.neighbors:
+            if node.state == "active":
+                if n.state in ("start", "active", "target"):
+                    pygame.draw.line(WINDOW, (255, 255, 0), (node.x, node.y), (n.x, n.y), LINE_SIZE)
+            elif node.state == n.state == "path":
+                pygame.draw.line(WINDOW, (0, 100, 0), (node.x, node.y), (n.x, n.y), LINE_SIZE)
             else:
-                pygame.draw.line(WINDOW, (0, 0, 0), (node["x"], node["y"]), (n["x"], n["y"]), LINE_SIZE)
+                pygame.draw.line(WINDOW, (0, 0, 0), (node.x, node.y), (n.x, n.y), LINE_SIZE)
     
     if aStar.startNode != None:
-        pygame.draw.circle(WINDOW, (0, 0, 255), (aStar.startNode["x"], aStar.startNode["y"]), NODE_SIZE + 3)
+        pygame.draw.circle(WINDOW, (0, 0, 255), (aStar.startNode.x, aStar.startNode.y), NODE_SIZE + 3)
     
     if aStar.endNode != None:
-        pygame.draw.circle(WINDOW, (255, 0, 0), (aStar.endNode["x"], aStar.endNode["y"]), NODE_SIZE + 3)
+        pygame.draw.circle(WINDOW, (255, 0, 0), (aStar.endNode.x, aStar.endNode.y), NODE_SIZE + 3)
     
     for node in aStar.nodes:
-        if node["state"] == None:
-            pygame.draw.circle(WINDOW, (0, 255, 255), (node["x"], node["y"]), NODE_SIZE)
-        elif node["state"] == "active":
-            pygame.draw.circle(WINDOW, (255, 255, 0), (node["x"], node["y"]), NODE_SIZE)
-        elif node["state"] == "used":
-            pygame.draw.circle(WINDOW, (255, 0, 255), (node["x"], node["y"]), NODE_SIZE)
-        elif node["state"] == "path":
-            pygame.draw.circle(WINDOW, (0, 100, 0), (node["x"], node["y"]), NODE_SIZE)
+        if node.state == None:
+            pygame.draw.circle(WINDOW, (0, 255, 255), (node.x, node.y), NODE_SIZE)
+        elif node.state == "active":
+            pygame.draw.circle(WINDOW, (255, 255, 0), (node.x, node.y), NODE_SIZE)
+        elif node.state == "used":
+            pygame.draw.circle(WINDOW, (255, 0, 255), (node.x, node.y), NODE_SIZE)
+        elif node.state == "path":
+            pygame.draw.circle(WINDOW, (0, 100, 0), (node.x, node.y), NODE_SIZE)
     
     pygame.display.update()
 
